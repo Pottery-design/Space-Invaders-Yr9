@@ -27,12 +27,18 @@ while True:
 
     # Updating
     game.spaceship_group.update()
+    game.move_aliens()
+    game.alien_shoot_laser()
+    game.alien_lasers_group.update()
+
     # Drawing
     screen.fill(GREY)
     game.spaceship_group.draw(screen)
     game.spaceship_group.sprite.lasers_group.draw(screen)
     for obstacle in game.obstacles:
         obstacle.blocks_group.draw(screen)
+    game.aliens_group.draw(screen)
+    game.alien_lasers_group.draw(screen)
 
     pygame.display.update()
     clock.tick(60)
