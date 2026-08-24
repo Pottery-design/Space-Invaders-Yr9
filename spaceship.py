@@ -3,12 +3,13 @@ from laser import Laser
 
 # Defining Spaceship
 class Spaceship(pygame.sprite.Sprite):
-    def __init__ (self, screen_width, screen_height):
+    def __init__ (self, screen_width, screen_height, offset):
         super().__init__()
+        self.offset = offset
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.image = pygame.image.load("C:/Users/jackie.lu2/OneDrive - NSW Department of Education/Yr9 Game Coding/Graphics/spaceship.png")
-        self.rect = self.image.get_rect(midbottom = (self.screen_width/2,self.screen_height))
+        self.rect = self.image.get_rect(midbottom = ((self.screen_width + self.offset)/2, self.screen_height))
         self.speed = 6
 
         # Defining Laser Variables
@@ -44,8 +45,8 @@ class Spaceship(pygame.sprite.Sprite):
     def constrain_movement(self):
         if self.rect.right > self.screen_width:
             self.rect.right = self.screen_width
-        if self.rect.left < 0:
-            self.rect.left = 0
+        if self.rect.left < self.offset:
+            self.rect.left = self.offset
 
     # Firing Laser Delay
     def recharge_laser(self):
@@ -56,5 +57,5 @@ class Spaceship(pygame.sprite.Sprite):
 
     # Resetting The Spaceship After GAME_OVER
     def reset(self):
-        self.rect = self.image.get_rect(midbottom = (self.screen_width/2, self.screen_height))
+        self.rect = self.image.get_rect(midbottom = ((self.screen_width + self.offset)/2, self.screen_height))
         self.lasers_group.empty()
