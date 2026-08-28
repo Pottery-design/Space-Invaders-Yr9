@@ -24,6 +24,7 @@ class Game:
         self.run = True
         self.score = 0
         self.highscore = 0
+        self.spaceship_hit = pygame.mixer.Sound("C:/Users/jackie.lu2/OneDrive - NSW Department of Education/Yr9 Game Coding/Sounds/Sounds_spaceship_hit.wav")
         self.explosion_sound = pygame.mixer.Sound("C:/Users/jackie.lu2/OneDrive - NSW Department of Education/Yr9 Game Coding/Sounds/Sounds_explosion.ogg")
         self.load_highscore()
         pygame.mixer.music.load("C:/Users/jackie.lu2/OneDrive - NSW Department of Education/Yr9 Game Coding/Sounds/Sounds_music.ogg")
@@ -115,6 +116,7 @@ class Game:
                 if pygame.sprite.spritecollide(laser_sprite, self.spaceship_group, False):
                     laser_sprite.kill()
                     self.lives -= 1
+                    self.spaceship_hit.play()
                     if self.lives == 0:
                         self.game_over()
 
