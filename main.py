@@ -1,5 +1,3 @@
-# 2:10:15
-
 import pygame, sys, random
 from game import Game
 
