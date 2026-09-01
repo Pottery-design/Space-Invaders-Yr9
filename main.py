@@ -11,7 +11,7 @@ OFFSET = 50
 GREY = (29, 29, 27)
 YELLOW = (243, 216, 63)
 
-font = pygame.font.Font("C:/Users/jackie.lu2/OneDrive - NSW Department of Education/Yr9 Game Coding/Font/monogram.ttf", 40)
+font = pygame.font.Font("Font/monogram.ttf", 40)
 level_surface = font.render("LEVEL 01", False, YELLOW)
 game_over_surface = font.render("GAME OVER", False, YELLOW)
 score_text_surface = font.render("SCORE", False, YELLOW)

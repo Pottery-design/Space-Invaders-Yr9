@@ -17,7 +17,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.laser_ready = True
         self.laser_time = 0
         self.laser_delay = 300
-        self.laser_sound = pygame.mixer.Sound("C:/Users/jackie.lu2/OneDrive - NSW Department of Education/Yr9 Game Coding/Sounds/Sounds_laser.ogg")
+        self.laser_sound = pygame.mixer.Sound("Sounds/Sounds_laser.ogg")
 
     # Registering User Input
     def get_user_input(self):
