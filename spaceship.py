@@ -23,12 +23,14 @@ class Spaceship(pygame.sprite.Sprite):
     def get_user_input(self):
         keys = pygame.key.get_pressed()
 
+        # Left and Right Movement
         if keys[pygame.K_RIGHT]:
             self.rect.x += self.speed
 
         if keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
 
+        # Firing Laser Given Not Recharging
         if keys[pygame.K_SPACE] and self.laser_ready:
             self.laser_ready = False
             laser = Laser(self.rect.center, 5, self.screen_height)

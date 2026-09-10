@@ -1,3 +1,4 @@
+# Importing Pygame, Random, and All Other Python Files
 import pygame, random
 from spaceship import Spaceship
 from obstacle import Obstacle
@@ -9,21 +10,34 @@ from alien import MysteryShip
 # Game Class: Holds All Game Elements
 class Game:
     def __init__(self, screen_width, screen_height, offset):
+        # Defining Basic Screen Variables
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.offset = offset
+
+        # Defining Spaceship
         self.spaceship_group = pygame.sprite.GroupSingle()
         self.spaceship_group.add(Spaceship(self.screen_width, self.screen_height, self.offset))
+
+        # Defining Obstacles
         self.obstacles = self.create_obstacles()
+
+        # Defining Aliens and Mystery Ship
         self.aliens_group = pygame.sprite.Group()
         self.create_aliens()
         self.aliens_direction = 1
         self.alien_lasers_group = pygame.sprite.Group()
         self.mystery_ship_group = pygame.sprite.GroupSingle()
+
+        # Dependent Variables: Lives, Score, Highscore
         self.lives = 3
-        self.run = True
         self.score = 0
         self.highscore = 0
+
+        # Defining if Game is Running
+        self.run = True
+
+        # Defining Sound Effects & Music
         self.spaceship_hit = pygame.mixer.Sound("Sounds/Sounds_spaceship_hit.wav")
         self.explosion_sound = pygame.mixer.Sound("Sounds/Sounds_explosion.ogg")
         self.load_highscore()

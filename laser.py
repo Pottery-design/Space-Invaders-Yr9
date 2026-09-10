@@ -1,6 +1,6 @@
 import pygame
 
-# Creating Lasers (Both Player and Enemy)
+# Creating Lasers (Both For The Player and Enemies)
 class Laser(pygame.sprite.Sprite):
     def __init__(self, position, speed, screen_height):
         super().__init__()
@@ -10,8 +10,10 @@ class Laser(pygame.sprite.Sprite):
         self.speed = speed
         self.screen_height = screen_height
 
+    # Movement of Lasers
     def update(self):
         self.rect.y -= self.speed
+
         # Destroying Lasers If Not In Game Window
         if self.rect.y > self.screen_height + 15 or self.rect.y < 0:
             self.kill()

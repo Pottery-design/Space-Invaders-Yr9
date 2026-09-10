@@ -30,11 +30,15 @@ grid = [
 class Obstacle:
     def __init__(self, x, y):
         self.blocks_group = pygame.sprite.Group()
+
         # Checks Each Row
         for row in range(len(grid)): 
+
             # Checks Each Column
             for column in range(len(grid[0])):
                 if grid[row][column] == 1:
+                    
+                    # Finds Position and Creates Block
                     pos_x = x + column * 3
                     pos_y = y + row * 3
                     block = Block(pos_x, pos_y)
