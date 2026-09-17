@@ -5,6 +5,8 @@ This is an assessment task for Computer Technology, Term 3.
 Space Invaders is a classic arcade game released in July 1978 by Taito. The main goal of the game is to destroy all the approaching aliens using your lasers before they reach your spaceship. In this modified computer version, arrow keys will replace the joystick movement and the spacebar will replace the button laser shooting.
 
 ## Setup Instructions
-Download this repository as a ZIP folder.
+Press the green 'Code' button.
+Download this repository as a ZIP folder by pressing 'Download ZIP'.
+Find your downloaded file from File Explorer and move it to the desktop.
 
 ## How To Run The Game
