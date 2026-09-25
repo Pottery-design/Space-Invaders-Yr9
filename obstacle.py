@@ -8,7 +8,7 @@ class Block(pygame.sprite.Sprite):
         self.image.fill((243, 216, 63))
         self.rect = self.image.get_rect(topleft = (x, y))
 
-# Grid System
+# Grid System for Obstacles
 grid = [
     [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
     [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
@@ -37,7 +37,7 @@ class Obstacle:
             # Checks Each Column
             for column in range(len(grid[0])):
                 if grid[row][column] == 1:
-                    
+
                     # Finds Position and Creates Block
                     pos_x = x + column * 3
                     pos_y = y + row * 3
