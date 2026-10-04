@@ -7,6 +7,27 @@ from alien import Alien
 from laser import Laser
 from alien import MysteryShip
 
+# Level Creator for Formation of Aliens
+ALIEN_LEVELS = [
+    # Level 1
+    [
+        [3] * 11,
+        [2] * 11,
+        [2] * 11,
+        [1] * 11,
+        [1] * 11,
+    ],
+
+    # Level 2
+    [
+        [0, 0, 3, 0, 0, 3, 0, 0, 3, 0, 0],
+        [0, 2, 2, 2, 0, 2, 2, 2, 0, 2, 0],
+        [1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+        [0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0],
+        [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+    ],
+]
+
 # Game Class: Holds All Game Elements
 class Game:
     def __init__(self, screen_width, screen_height, offset):
@@ -24,17 +45,19 @@ class Game:
 
         # Defining Aliens and Mystery Ship
         self.aliens_group = pygame.sprite.Group()
-        self.create_aliens()
-        self.aliens_direction = 1
         self.alien_lasers_group = pygame.sprite.Group()
         self.mystery_ship_group = pygame.sprite.GroupSingle()
+        self.level = 1
+        self.create_aliens()
+        self.aliens_direction = 1
 
         # Dependent Variables: Lives, Score, Highscore
         self.lives = 3
         self.score = 0
         self.highscore = 0
 
-        # Defining if Game is Running
+        # Defining Constant Variables: Run, Won
+        self.won = False
         self.run = True
 
         # Defining Sound Effects & Music
@@ -57,17 +80,15 @@ class Game:
 
     # Creating Aliens
     def create_aliens(self):
-        for row in range(5):
-            for column in range (11):
+        layout = ALIEN_LEVELS[self.level - 1]
+
+        for row, alien_row in enumerate(layout):
+            for column, alien_type in enumerate(alien_row):
+                if alien_type == 0:
+                    continue
+
                 x = 75 + column * 55
                 y = 110 + row * 55
-
-                if row == 0:
-                    alien_type = 3
-                elif row in (1, 2):
-                    alien_type = 2
-                else:
-                    alien_type = 1
 
                 alien = Alien(alien_type, x + self.offset/2, y)
                 self.aliens_group.add(alien)
@@ -151,6 +172,8 @@ class Game:
 
     def reset(self):
         self.run = True
+        self.won = False
+        self.level = 1
         self.lives = 3
         self.spaceship_group.sprite.reset()
         self.aliens_group.empty()
@@ -173,3 +196,13 @@ class Game:
                 self.highscore = int(file.read())
         except FileNotFoundError:
             self.highscore = 0
+
+    def advance_level(self):
+        if self.level < len(ALIEN_LEVELS):
+            self.level += 1
+            self.aliens_direction = 1
+            self.alien_lasers_group.empty()
+            self.create_aliens()
+        else:
+            self.won = True
+            self.game_over()

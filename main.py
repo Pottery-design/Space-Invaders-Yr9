@@ -12,11 +12,15 @@ OFFSET = 50
 GREY = (29, 29, 27)
 YELLOW = (243, 216, 63)
 
+# Begin Tracking Time
+clock = pygame.time.Clock()
+
+game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
+
 # Importing Text Font
 font = pygame.font.Font("Font/monogram.ttf", 40)
 
 # Creating Text Display
-level_surface = font.render("LEVEL 01", False, YELLOW)
 game_over_surface = font.render("GAME OVER", False, YELLOW)
 score_text_surface = font.render("SCORE", False, YELLOW)
 highscore_text_surface = font.render("HIGH-SCORE", False, YELLOW)
@@ -24,11 +28,6 @@ highscore_text_surface = font.render("HIGH-SCORE", False, YELLOW)
 # Basic Screen Display & Set Up
 screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
 pygame.display.set_caption("Python Space Invaders")
-
-# Begin Tracking Time
-clock = pygame.time.Clock()
-
-game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
 
 # Creating Game Events: Alien Shooting, Mystery Ship Spawning
 SHOOT_LASER = pygame.USEREVENT
@@ -63,6 +62,9 @@ while True:
         game.mystery_ship_group.update()
         game.check_for_collisions()
 
+        if not game.aliens_group:
+            game.advance_level()
+
     # Drawing
     screen.fill(GREY)
 
@@ -73,6 +75,7 @@ while True:
 
     # Level & Game Over Text
     if game.run:
+        level_surface = font.render(f"LEVEL {game.level:02}", False, YELLOW)
         screen.blit(level_surface, (570, 740, 50, 50))
     else:
         screen.blit(game_over_surface, (570, 740, 50, 50))
