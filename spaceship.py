@@ -8,7 +8,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.offset = offset
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.image = pygame.image.load("C:/Users/jackie.lu2/OneDrive - NSW Department of Education/Yr9 Game Coding/Graphics/spaceship.png")
+        self.image = pygame.image.load("Graphics/spaceship.png")
         self.rect = self.image.get_rect(midbottom = ((self.screen_width + self.offset)/2, self.screen_height))
         self.speed = 6
 
