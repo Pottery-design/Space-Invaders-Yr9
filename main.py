@@ -1,5 +1,6 @@
 import pygame, sys, random
 from game import Game
+from assets import get_asset_path
 
 pygame.init()
 
@@ -18,7 +19,7 @@ clock = pygame.time.Clock()
 game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
 
 # Importing Text Font
-font = pygame.font.Font("Font/monogram.ttf", 40)
+font = pygame.font.Font(get_asset_path("Font/monogram.ttf"), 40)
 
 # Creating Text Display
 game_over_surface = font.render("GAME OVER", False, YELLOW)

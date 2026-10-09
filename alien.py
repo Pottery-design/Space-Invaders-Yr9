@@ -1,4 +1,5 @@
 import pygame, random
+from assets import get_asset_path
 
 # Creating Basic Aliens
 class Alien(pygame.sprite.Sprite):
@@ -7,7 +8,7 @@ class Alien(pygame.sprite.Sprite):
 
         # Defining Basic Variables of Alien/s
         self.type = type
-        path = f"Graphics/alien_{type}.png"
+        path = get_asset_path(f"Graphics/alien_{type}.png")
         self.image = pygame.image.load(path)
         self.rect = self.image.get_rect(topleft = (x, y))
 
@@ -21,7 +22,7 @@ class MysteryShip(pygame.sprite.Sprite):
         super().__init__()
         self.screen_width = screen_width
         self.offset = offset
-        self.image = pygame.image.load("Graphics/mystery.png")
+        self.image = pygame.image.load(get_asset_path("Graphics/mystery.png"))
 
         # Randomly Appearing Mystery Ship: Direction & Randomness
         x = random.choice([self.offset/2, (self.screen_width + self.offset) - self.image.get_width()])

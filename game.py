@@ -1,5 +1,8 @@
 # Importing Pygame, Random, and All Other Python Files
+import os
 import pygame, random
+from pathlib import Path
+from assets import get_asset_path
 from spaceship import Spaceship
 from obstacle import Obstacle
 from obstacle import grid
@@ -82,16 +85,21 @@ class Game:
         self.lives = 3
         self.score = 0
         self.highscore = 0
+        self.highscore_file = (
+            Path(os.environ.get("LOCALAPPDATA", Path.home()))
+            / "SpaceInvaders"
+            / "highscore.txt"
+        )
 
         # Defining Constant Variables: Run, Won
         self.won = False
         self.run = True
 
         # Defining Sound Effects & Music
-        self.spaceship_hit = pygame.mixer.Sound("Sounds/Sounds_spaceship_hit.wav")
-        self.explosion_sound = pygame.mixer.Sound("Sounds/Sounds_explosion.ogg")
+        self.spaceship_hit = pygame.mixer.Sound(get_asset_path("Sounds/Sounds_spaceship_hit.wav"))
+        self.explosion_sound = pygame.mixer.Sound(get_asset_path("Sounds/Sounds_explosion.ogg"))
         self.load_highscore()
-        pygame.mixer.music.load("Sounds/Sounds_music.ogg")
+        pygame.mixer.music.load(get_asset_path("Sounds/Sounds_music.ogg"))
         pygame.mixer.music.play(-1)
 
     # Creating Obstacles
@@ -214,12 +222,19 @@ class Game:
         if self.score > self.highscore:
             self.highscore = self.score
 
-            with open("highscore.txt", "w") as file:
+            self.highscore_file.parent.mkdir(parents=True, exist_ok=True)
+            with self.highscore_file.open("w") as file:
                 file.write(str(self.highscore))
 
     def load_highscore(self):
+        if not self.highscore_file.exists():
+            previous_highscore_file = Path.cwd() / "highscore.txt"
+            if previous_highscore_file.is_file():
+                self.highscore_file.parent.mkdir(parents=True, exist_ok=True)
+                previous_highscore_file.replace(self.highscore_file)
+
         try:
-            with open("highscore.txt", "r") as file:
+            with self.highscore_file.open("r") as file:
                 self.highscore = int(file.read())
         except FileNotFoundError:
             self.highscore = 0
