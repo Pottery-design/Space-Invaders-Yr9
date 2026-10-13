@@ -1,11 +1,62 @@
 # Importing Pygame, Random, and All Other Python Files
+import os
 import pygame, random
+from pathlib import Path
+from assets import get_asset_path
 from spaceship import Spaceship
 from obstacle import Obstacle
 from obstacle import grid
 from alien import Alien
 from laser import Laser
 from alien import MysteryShip
+
+# Level Creator for Formation of Aliens
+ALIEN_LEVELS = [
+    # Level 1
+    [
+        [3] * 11,
+        [2] * 11,
+        [2] * 11,
+        [1] * 11,
+        [1] * 11,
+    ],
+
+    # Level 2
+    [
+        [0, 0, 3, 0, 0, 3, 0, 0, 3, 0, 0],
+        [0, 2, 2, 2, 0, 2, 2, 2, 0, 2, 0],
+        [1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+        [0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0],
+        [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+    ],
+
+    # Level 3
+    [
+        [3] * 4 + [0] * 1 + [3] * 4,
+        [3] * 4 + [0] * 1 + [3] * 4,
+        [2] * 4 + [0] * 1 + [2] * 4,
+        [2] * 4 + [0] * 1 + [2] * 4,
+        [1] * 4 + [0] * 1 + [1] * 4,
+    ],
+
+    # Level 4
+    [
+        [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+        [2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+        [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+        [2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+        [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+    ],
+
+    # Level 5
+    [
+        [3] * 2 + [0] * 1 + [3] * 2 + [0] * 1 + [3] * 2 + [0] * 1 + [3] * 2,
+        [2] * 2 + [0] * 1 + [2] * 2 + [0] * 1 + [2] * 2 + [0] * 1 + [2] * 2,
+        [1] * 2 + [0] * 1 + [1] * 2 + [0] * 1 + [1] * 2 + [0] * 1 + [1] * 2,
+        [0] * 11,
+        [1] * 11,
+    ],
+]
 
 # Game Class: Holds All Game Elements
 class Game:
@@ -24,24 +75,31 @@ class Game:
 
         # Defining Aliens and Mystery Ship
         self.aliens_group = pygame.sprite.Group()
-        self.create_aliens()
-        self.aliens_direction = 1
         self.alien_lasers_group = pygame.sprite.Group()
         self.mystery_ship_group = pygame.sprite.GroupSingle()
+        self.level = 1
+        self.create_aliens()
+        self.aliens_direction = 1
 
         # Dependent Variables: Lives, Score, Highscore
         self.lives = 3
         self.score = 0
         self.highscore = 0
+        self.highscore_file = (
+            Path(os.environ.get("LOCALAPPDATA", Path.home()))
+            / "SpaceInvaders"
+            / "highscore.txt"
+        )
 
-        # Defining if Game is Running
+        # Defining Constant Variables: Run, Won
+        self.won = False
         self.run = True
 
         # Defining Sound Effects & Music
-        self.spaceship_hit = pygame.mixer.Sound("Sounds/Sounds_spaceship_hit.wav")
-        self.explosion_sound = pygame.mixer.Sound("Sounds/Sounds_explosion.ogg")
+        self.spaceship_hit = pygame.mixer.Sound(get_asset_path("Sounds/Sounds_spaceship_hit.wav"))
+        self.explosion_sound = pygame.mixer.Sound(get_asset_path("Sounds/Sounds_explosion.ogg"))
         self.load_highscore()
-        pygame.mixer.music.load("Sounds/Sounds_music.ogg")
+        pygame.mixer.music.load(get_asset_path("Sounds/Sounds_music.ogg"))
         pygame.mixer.music.play(-1)
 
     # Creating Obstacles
@@ -57,17 +115,15 @@ class Game:
 
     # Creating Aliens
     def create_aliens(self):
-        for row in range(5):
-            for column in range (11):
+        layout = ALIEN_LEVELS[self.level - 1]
+
+        for row, alien_row in enumerate(layout):
+            for column, alien_type in enumerate(alien_row):
+                if alien_type == 0:
+                    continue
+
                 x = 75 + column * 55
                 y = 110 + row * 55
-
-                if row == 0:
-                    alien_type = 3
-                elif row in (1, 2):
-                    alien_type = 2
-                else:
-                    alien_type = 1
 
                 alien = Alien(alien_type, x + self.offset/2, y)
                 self.aliens_group.add(alien)
@@ -151,6 +207,8 @@ class Game:
 
     def reset(self):
         self.run = True
+        self.won = False
+        self.level = 1
         self.lives = 3
         self.spaceship_group.sprite.reset()
         self.aliens_group.empty()
@@ -164,12 +222,29 @@ class Game:
         if self.score > self.highscore:
             self.highscore = self.score
 
-            with open("highscore.txt", "w") as file:
+            self.highscore_file.parent.mkdir(parents=True, exist_ok=True)
+            with self.highscore_file.open("w") as file:
                 file.write(str(self.highscore))
 
     def load_highscore(self):
+        if not self.highscore_file.exists():
+            previous_highscore_file = Path.cwd() / "highscore.txt"
+            if previous_highscore_file.is_file():
+                self.highscore_file.parent.mkdir(parents=True, exist_ok=True)
+                previous_highscore_file.replace(self.highscore_file)
+
         try:
-            with open("highscore.txt", "r") as file:
+            with self.highscore_file.open("r") as file:
                 self.highscore = int(file.read())
         except FileNotFoundError:
             self.highscore = 0
+
+    def advance_level(self):
+        if self.level < len(ALIEN_LEVELS):
+            self.level += 1
+            self.aliens_direction = 1
+            self.alien_lasers_group.empty()
+            self.create_aliens()
+        else:
+            self.won = True
+            self.game_over()
